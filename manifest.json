@@ -1,0 +1,8 @@
+{
+  "name": "Promenade Inspector",
+  "version": "0.0.1",
+  "description": "Extends the Developer Tools, adding tools for debugging and profiling Promenade applications.",
+  "devtools_page": "index.html",
+  "manifest_version": 2,
+  "minimum_chrome_version": "21.0.1180.57"
+}
