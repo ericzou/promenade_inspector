@@ -4,5 +4,9 @@
   "description": "Extends the Developer Tools, adding tools for debugging and profiling Promenade applications.",
   "devtools_page": "index.html",
   "manifest_version": 2,
-  "minimum_chrome_version": "21.0.1180.57"
+  "minimum_chrome_version": "21.0.1180.57",
+  "content_scripts":[{
+    "matches": ["http://localhost:3000/*"],
+    "js":["js/content_script.js"]
+  }]
 }
