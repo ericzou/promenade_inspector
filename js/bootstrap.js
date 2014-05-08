@@ -43,7 +43,7 @@ var page_getProperties = function() {
     return window.daboApp;
   }
 
-  return {
+  return window.$promenade = {
     model: getSelectedModel(),
     view: getSelectedView(),
     app: getApp()
