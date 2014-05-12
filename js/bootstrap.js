@@ -1,22 +1,53 @@
 var currentViewCount = 0;
 
-
 var page_getProperties = function() {
-  var app = window.daboApp; // hardcode the app name for now
-  var $currentElement = $($0);
-  var modelId = $currentElement.data('model-id');
-  var modelType = $currentElement.data('type');
-  var ret = app;
+  function getSelectedModel() {
+    var app = getApp();
+    var $currentElement = $($0);
+    var modelId = $currentElement.data('model-id');
+    var modelType = $currentElement.data('type');
+    var ret;
 
-  if (modelType) {
-    ret = app.getResource(modelType);
+    if (modelType) {
+      ret = app.getResource(modelType);
+    }
+
+    if (modelId && (typeof ret.get === 'function')) {
+      ret = ret.get(modelId);
+    }
+
+    return ret;
   }
 
-  if (modelId && (typeof ret.get === 'function')) {
-    ret = ret.get(modelId);
+  function getSelectedView() {
+    var app = getApp();
+    var currentElement = $0;
+    var currentView = app.view;
+    var queue = [];
+
+    while (currentView && currentView.el !== currentElement) {
+      if (currentView.layout) {
+        for (var region in currentView.layout) {
+          queue = queue.concat(currentView.getRegion(region).subviews);
+        }
+      }
+
+      currentView = queue.shift();
+    }
+
+    return currentView;
   }
 
-  return ret;
+  function getApp() {
+    // hardcode the app name for now
+    return window.daboApp;
+  }
+
+  return window.$promenade = {
+    model: getSelectedModel(),
+    view: getSelectedView(),
+    app: getApp()
+  };
 }
 
 // chrome.browserAction.onClicked.addListener(function(tab) {
@@ -29,8 +60,6 @@ var page_getProperties = function() {
 
 var expression = "window.__viewId; window.addEventListener('mouseup', function(){ window.__viewId = new Backbone.View().cid; window.postMessage({__viewId: window.__viewId}, '*')});"
 chrome.devtools.inspectedWindow.eval(expression);
-
-
 
 chrome.devtools.panels.elements.createSidebarPane(
     "Promenade Properties",
